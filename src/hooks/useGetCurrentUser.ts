@@ -11,8 +11,10 @@ const useGetCurrentUser = () => {
             try {
                 const response = await axios.get("/api/currentUser");
                 dispatch(setUserData(response.data));
-            } catch (error) {
-                console.error("Error fetching current user:", error);
+            } catch (error: any) {
+                if (error?.response?.status !== 401 && error?.response?.status !== 400 && error?.response?.status !== 404) {
+                    console.error("Error fetching current user:", error);
+                }
             }
         };
 
