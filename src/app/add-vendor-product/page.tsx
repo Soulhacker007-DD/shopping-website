@@ -163,7 +163,7 @@ export default function AddProduct() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* PRIMARY CONFIGURATION */}
           <div className="lg:col-span-2 space-y-8">
-            <section className="bg-white/[0.03] backdrop-blur-3xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl">
+            <section className="bg-white/3 backdrop-blur-3xl border border-white/5 p-8 rounded-3xl shadow-2xl">
               <div className="flex items-center gap-3 mb-8 border-b border-white/5 pb-4">
                 <FiPackage className="text-blue-500" size={20} />
                 <h3 className="text-sm font-black uppercase tracking-widest text-white/80">Core Manifest Details</h3>
@@ -173,7 +173,7 @@ export default function AddProduct() {
                 <div className="relative group">
                   <FiTag className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-all" />
                   <input 
-                    className="w-full bg-white/[0.02] border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
+                    className="w-full bg-white/2 border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
                     placeholder="Product identification Title"
                     value={title} onChange={(e) => setTitle(e.target.value)} 
                   />
@@ -183,7 +183,7 @@ export default function AddProduct() {
                   <div className="relative group">
                     <FiDollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-all" />
                     <input 
-                      className="w-full bg-white/[0.02] border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
+                      className="w-full bg-white/2 border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
                       placeholder="Pricing Model (INR)" type="number"
                       value={price} onChange={(e) => setPrice(e.target.value)} 
                     />
@@ -191,7 +191,7 @@ export default function AddProduct() {
                   <div className="relative group">
                     <FiLayers className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-all" />
                     <input 
-                      className="w-full bg-white/[0.02] border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
+                      className="w-full bg-white/2 border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
                       placeholder="Inventory Volume (Stock)" type="number"
                       value={stock} onChange={(e) => setStock(e.target.value)} 
                     />
@@ -200,7 +200,8 @@ export default function AddProduct() {
 
                 <div className="relative group">
                   <select 
-                    className="w-full bg-white/[0.02] border border-white/10 rounded-2xl p-4 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase text-gray-400 appearance-none"
+                    title="Select product category"
+                    className="w-full bg-white/2 border border-white/10 rounded-2xl p-4 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase text-gray-400 appearance-none"
                     value={category} onChange={(e) => setCategory(e.target.value)}
                   >
                     <option value="" className="bg-black">Select Deployment Category</option>
@@ -212,7 +213,7 @@ export default function AddProduct() {
 
                 {category === "Others" && (
                   <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-                    <input className="w-full bg-white/[0.02] border border-white/10 rounded-2xl p-4 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
+                    <input className="w-full bg-white/2 border border-white/10 rounded-2xl p-4 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
                       placeholder="Specify Custom Classification"
                       value={customCategory}
                       onChange={(e) => setCustomCategory(e.target.value)}
@@ -223,7 +224,7 @@ export default function AddProduct() {
                 <div className="relative group">
                   <FiFileText className="absolute left-4 top-4 text-gray-600 group-focus-within:text-blue-500 transition-all" />
                   <textarea 
-                    className="w-full bg-white/[0.02] border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700 min-h-[120px]"
+                    className="w-full bg-white/2 border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700 min-h-[120px]"
                     placeholder="Comprehensive Asset Description"
                     rows={4} value={description} onChange={(e) => setDescription(e.target.value)} 
                   />
@@ -232,7 +233,7 @@ export default function AddProduct() {
             </section>
 
             {/* POLICY & LOGISTICS */}
-            <section className="bg-white/[0.03] backdrop-blur-3xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl">
+            <section className="bg-white/3 backdrop-blur-3xl border border-white/5 p-8 rounded-3xl shadow-2xl">
               <div className="flex items-center gap-3 mb-8 border-b border-white/5 pb-4">
                 <FiTruck className="text-blue-500" size={20} />
                 <h3 className="text-sm font-black uppercase tracking-widest text-white/80">Logistics & Policy Manifest</h3>
@@ -241,7 +242,7 @@ export default function AddProduct() {
               <div className="space-y-8">
                 <div 
                   className={`p-6 rounded-3xl border transition-all cursor-pointer flex items-center justify-between ${
-                    isWearable ? "bg-blue-500/10 border-blue-500/30" : "bg-white/[0.02] border-white/5 grayscale"
+                    isWearable ? "bg-blue-500/10 border-blue-500/30" : "bg-white/2 border-white/5 grayscale"
                   }`}
                   onClick={() => setIsWearable(!isWearable)}
                 >
@@ -275,7 +276,7 @@ export default function AddProduct() {
                             className={`px-6 py-2 rounded-xl text-[10px] font-black border transition-all ${
                               sizes.includes(size)
                                 ? "bg-blue-500 border-blue-400 text-white shadow-[0_0_20px_rgba(59,130,246,0.3)]"
-                                : "bg-white/[0.03] border-white/10 text-gray-500 hover:border-white/20"
+                                : "bg-white/3 border-white/10 text-gray-500 hover:border-white/20"
                             }`}
                           >
                             {size}
@@ -289,14 +290,14 @@ export default function AddProduct() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="relative group">
                     <FiRotateCcw className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-all" />
-                    <input className="w-full bg-white/[0.02] border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
+                    <input className="w-full bg-white/2 border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
                       placeholder="Replacement Horizon (Days)" type="number"
                       value={replacementDays} onChange={(e) => setReplacementDays(e.target.value)} 
                     />
                   </div>
                   <div className="relative group">
                     <FiShield className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-all" />
-                    <input className="w-full bg-white/[0.02] border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
+                    <input className="w-full bg-white/2 border border-white/10 rounded-2xl p-4 pl-12 text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
                       placeholder="Warranty Coverage"
                       value={warranty} onChange={(e) => setWarranty(e.target.value)} 
                     />
@@ -304,7 +305,7 @@ export default function AddProduct() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                  <label className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-2xl cursor-pointer hover:bg-white/[0.04] transition-all">
+                  <label className="flex items-center justify-between p-4 bg-white/2 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/4 transition-all">
                     <div className="flex items-center gap-3">
                       <FiTruck className={freeDelivery ? "text-blue-500" : "text-gray-600"} />
                       <span className="text-[10px] font-black uppercase tracking-widest">Free Delivery</span>
@@ -315,7 +316,7 @@ export default function AddProduct() {
                     </div>
                   </label>
 
-                  <label className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-2xl cursor-pointer hover:bg-white/[0.04] transition-all">
+                  <label className="flex items-center justify-between p-4 bg-white/2 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/4 transition-all">
                     <div className="flex items-center gap-3">
                       <FiCreditCard className={payOnDelivery ? "text-blue-500" : "text-gray-600"} />
                       <span className="text-[10px] font-black uppercase tracking-widest">Cash on Delivery</span>
@@ -332,7 +333,7 @@ export default function AddProduct() {
 
           {/* SIDEBAR: ASSETS & SPECS */}
           <div className="space-y-8">
-            <section className="bg-white/[0.03] backdrop-blur-3xl border border-white/5 p-6 rounded-[2.5rem] shadow-2xl">
+            <section className="bg-white/3 backdrop-blur-3xl border border-white/5 p-6 rounded-3xl shadow-2xl">
               <div className="flex items-center gap-3 mb-6 border-b border-white/5 pb-4">
                 <FiUpload className="text-blue-500" size={18} />
                 <h3 className="text-sm font-black uppercase tracking-widest text-white/80">Visual Assets</h3>
@@ -345,7 +346,7 @@ export default function AddProduct() {
                       onChange={(e) => handleImageChange(idx, e.target.files?.[0] || null)}
                     />
                     <label htmlFor={`img${idx}`}
-                      className="cursor-pointer block aspect-square bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-blue-500/50 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.1)]"
+                      className="cursor-pointer block aspect-square bg-white/3 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-blue-500/50 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.1)]"
                     >
                       {previews[idx] ? (
                         <Image src={previews[idx]} alt="preview" fill className="object-cover" />
@@ -362,7 +363,7 @@ export default function AddProduct() {
               <p className="text-[8px] font-black uppercase tracking-widest text-gray-600 mt-4 text-center">Protocol requires 4 high-resolution captures</p>
             </section>
 
-            <section className="bg-white/[0.03] backdrop-blur-3xl border border-white/5 p-6 rounded-[2.5rem] shadow-2xl">
+            <section className="bg-white/3 backdrop-blur-3xl border border-white/5 p-6 rounded-3xl shadow-2xl">
               <div className="flex items-center gap-3 mb-6 border-b border-white/5 pb-4">
                 <FiLayers className="text-blue-500" size={18} />
                 <h3 className="text-sm font-black uppercase tracking-widest text-white/80">Diagnostic Specs</h3>
@@ -371,7 +372,7 @@ export default function AddProduct() {
               <div className="space-y-4">
                 <div className="flex gap-2">
                   <input
-                    className="flex-1 bg-white/[0.02] border border-white/10 rounded-xl p-3 text-[10px] font-black tracking-widest focus:outline-none focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
+                    className="flex-1 bg-white/2 border border-white/10 rounded-xl p-3 text-[10px] font-black tracking-widest focus:outline-none focus:border-blue-500/50 transition-all uppercase placeholder:text-gray-700"
                     placeholder={`Diagnostic Point`}
                     value={currentPoint}
                     onChange={(e) => setCurrentPoint(e.target.value)}
@@ -379,6 +380,7 @@ export default function AddProduct() {
                   />
                   <button
                     type="button"
+                    title="Add detail point"
                     onClick={handleAddPoint}
                     className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-blue-500/20"
                   >
@@ -392,13 +394,14 @@ export default function AddProduct() {
                       key={i}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="flex justify-between items-center bg-white/[0.02] border border-white/5 p-3 rounded-xl group"
+                      className="flex justify-between items-center bg-white/2 border border-white/5 p-3 rounded-xl group"
                     >
                       <span className="text-[9px] font-black text-gray-400 capitalize">
                         {i + 1}. {point}
                       </span>
                       <button
                         type="button"
+                        title="Delete detail point"
                         onClick={() => handleRemovePoint(i)}
                         className="text-gray-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
                       >
@@ -435,22 +438,6 @@ export default function AddProduct() {
           </div>
         </div>
       </main>
-
-      <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.02);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(59, 130, 246, 0.2);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(59, 130, 246, 0.4);
-        }
-      `}</style>
     </div>
   );
 }

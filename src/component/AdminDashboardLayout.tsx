@@ -48,7 +48,7 @@ export default function AdminDashbordLayout() {
     <div className="w-full flex min-h-screen bg-[#050505] text-white font-sans selection:bg-blue-500/30">
 
       {/* ---------------- MOBILE TOP BAR ---------------- */}
-      <div className="lg:hidden fixed top-0 left-0 w-full bg-black/80 backdrop-blur-xl px-6 py-4 flex justify-between items-center border-b border-white/5 z-[60]">
+      <div className="lg:hidden fixed top-0 left-0 w-full bg-black/80 backdrop-blur-xl px-6 py-4 flex justify-between items-center border-b border-white/5 z-50">
         <div className="flex items-center gap-2">
            <ShieldCheck className="text-blue-500 w-5 h-5" />
            <span className="text-sm font-black uppercase tracking-tighter">Rush<span className="text-blue-500">cart</span> Control</span>
@@ -123,7 +123,7 @@ export default function AdminDashbordLayout() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-md z-[70] lg:hidden"
+              className="fixed inset-0 bg-black/60 backdrop-blur-md z-40 lg:hidden"
               onClick={() => setMenuOpen(false)}
             />
             <motion.aside
@@ -131,11 +131,12 @@ export default function AdminDashbordLayout() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="lg:hidden fixed top-0 left-0 w-[85%] max-w-sm h-full bg-black border-r border-white/10 p-8 z-[80] shadow-2xl flex flex-col"
+              className="lg:hidden fixed top-0 left-0 w-[85%] max-w-sm h-full bg-black border-r border-white/10 p-8 z-50 shadow-2xl flex flex-col"
             >
               <div className="flex justify-between items-center mb-12">
                 <h1 className="text-xl font-black uppercase tracking-tighter">Control <span className="text-blue-500">Board</span></h1>
                 <button 
+                  title="Close menu"
                   onClick={() => setMenuOpen(false)}
                   className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10"
                 >

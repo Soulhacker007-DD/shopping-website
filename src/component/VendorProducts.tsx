@@ -7,8 +7,8 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { RootState } from "@/redux/store";
 import { setAllProductsData } from "@/redux/vendorSlice";
-import getAllProductsData from "@/hooks/getAllProductsData";
-import getCurrentUser from "@/hooks/getCurrentUser";
+import useGetAllProductsData from "@/hooks/useGetAllProductsData";
+import useGetCurrentUser from "@/hooks/useGetCurrentUser";
 import { 
   Package, 
   Plus, 
@@ -24,8 +24,8 @@ import {
 export default function VendorProducts() {
   const router = useRouter();
   const dispatch = useDispatch();
-  getAllProductsData();
-  getCurrentUser();
+  useGetAllProductsData();
+  useGetCurrentUser();
   const currentUser = useSelector((state: RootState) => state.user.userData);
   const { allProductsData } = useSelector((state: RootState) => state.vendor);
   const [loadingId, setLoadingId] = useState<string | null>(null);

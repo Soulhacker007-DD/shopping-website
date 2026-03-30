@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -22,7 +22,7 @@ import logo from "@/assets/rushcart_logo.png";
 import { signOut } from "next-auth/react";
 import mongoose from "mongoose";
 import axios from "axios";
-import { ThemeToggle } from "./theme-toggle";
+
 
 interface IUser {
   _id?: mongoose.Types.ObjectId;
@@ -65,13 +65,13 @@ export default function Navbar({ user }: { user: IUser }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const fetchCartCount = async () => {
+  const fetchCartCount = useCallback(async () => {
     try {
       const res = await axios.get("/api/cart/get");
       if (res.status === 200) {
         const cart = res.data?.cart || [];
         const totalQty = cart.reduce(
-          (sum: number, item: any) => sum + item.quantity,
+          (sum: number, item: { quantity: number }) => sum + item.quantity,
           0
         );
         setCartCount(totalQty);
@@ -79,16 +79,16 @@ export default function Navbar({ user }: { user: IUser }) {
     } catch (err) {
       console.log("Navbar cart fetch error:", err);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (user?.role === "user") {
       fetchCartCount();
     }
-  }, [user]);
+  }, [user?.role, fetchCartCount]);
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 ${
+    <nav className={`fixed top-0 left-0 w-full z-100 transition-all duration-500 ${
       scrolled 
         ? "bg-white/80 dark:bg-black/60 backdrop-blur-2xl border-b border-gray-200 dark:border-white/10 py-2.5 shadow-2xl" 
         : "bg-transparent py-4"
@@ -129,7 +129,7 @@ export default function Navbar({ user }: { user: IUser }) {
             <IconBtn Icon={Phone} onClick={() => router.push("/support")} />
           </div>
 
-          <ThemeToggle />
+
 
           <div className="relative group/profile">
             <motion.div 
@@ -183,7 +183,13 @@ export default function Navbar({ user }: { user: IUser }) {
   );
 }
 
-const NavItem = ({ label, path, router }: any) => {
+interface NavItemProps {
+  label: string;
+  path: string;
+  router: ReturnType<typeof useRouter>;
+}
+
+const NavItem = ({ label, path, router }: NavItemProps) => {
   const pathname = usePathname();
   const isActive = pathname === path;
   return (
@@ -200,7 +206,12 @@ const NavItem = ({ label, path, router }: any) => {
   );
 };
 
-const IconBtn = ({ Icon, onClick }: any) => (
+interface IconBtnProps {
+  Icon: React.ComponentType<{ size: number }>;
+  onClick: () => void;
+}
+
+const IconBtn = ({ Icon, onClick }: IconBtnProps) => (
   <motion.button 
     whileHover={{ scale: 1.1 }} 
     whileTap={{ scale: 0.95 }}
@@ -211,7 +222,12 @@ const IconBtn = ({ Icon, onClick }: any) => (
   </motion.button>
 );
 
-const CartBtn = ({ router, count }: any) => (
+interface CartBtnProps {
+  router: ReturnType<typeof useRouter>;
+  count: number;
+}
+
+const CartBtn = ({ router, count }: CartBtnProps) => (
   <motion.button
     whileHover={{ scale: 1.05 }}
     whileTap={{ scale: 0.95 }}
@@ -227,7 +243,13 @@ const CartBtn = ({ router, count }: any) => (
   </motion.button>
 );
 
-const ProfileDropdown = ({ router, user, close }: any) => (
+interface ProfileDropdownProps {
+  router: ReturnType<typeof useRouter>;
+  user: IUser;
+  close: () => void;
+}
+
+const ProfileDropdown = ({ router, user, close }: ProfileDropdownProps) => (
   <motion.div
     initial={{ opacity: 0, y: 10, scale: 0.95 }}
     animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -260,7 +282,14 @@ const ProfileDropdown = ({ router, user, close }: any) => (
   </motion.div>
 );
 
-const DropdownBtn = ({ Icon, label, onClick, close }: any) => (
+interface DropdownBtnProps {
+  Icon: React.ComponentType<{ size: number }>;
+  label: string;
+  onClick: () => void;
+  close: () => void;
+}
+
+const DropdownBtn = ({ Icon, label, onClick, close }: DropdownBtnProps) => (
   <button
     onClick={() => {
       onClick();
@@ -276,7 +305,13 @@ const DropdownBtn = ({ Icon, label, onClick, close }: any) => (
   </button>
 );
 
-const Sidebar = ({ close, router, user }: any) => (
+interface SidebarProps {
+  close: () => void;
+  router: ReturnType<typeof useRouter>;
+  user: IUser;
+}
+
+const Sidebar = ({ close, router, user }: SidebarProps) => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -297,7 +332,7 @@ const Sidebar = ({ close, router, user }: any) => (
           <Image src={logo} alt="Logo" width={32} height={32} className="rounded-xl border border-white/10" />
           <span className="text-xl font-black text-white">Menu</span>
         </div>
-        <button onClick={close} className="p-2 rounded-xl bg-white/5 text-white">
+        <button onClick={close} className="p-2 rounded-xl bg-white/5 text-white" aria-label="Close menu">
           <X size={24} />
         </button>
       </div>
@@ -306,19 +341,29 @@ const Sidebar = ({ close, router, user }: any) => (
         <SidebarLink Icon={Home} label="Home" path="/" router={router} close={close} />
         <SidebarLink Icon={LayoutGrid} label="Categories" path="/category" router={router} close={close} />
         <SidebarLink Icon={Store} label="Browse Shops" path="/shop" router={router} close={close} />
-        <SidebarLink Icon={Package} label="Track Orders" path="/orders" router={router} close={close} />
+        
+        {user?.role === "user" && (
+          <SidebarLink Icon={Package} label="Track Orders" path="/orders" router={router} close={close} />
+        )}
+
         <div className="h-[1px] bg-white/10 my-4" />
-        <SidebarLink Icon={User} label="Profile" path="/profile" router={router} close={close} />
-        <SidebarLink Icon={LogIn} label="Sign In" path="/login" router={router} close={close} />
-        <button
-          onClick={() => {
-            signOut();
-            close();
-          }}
-          className="flex items-center gap-4 px-6 py-4 rounded-3xl bg-red-500/10 text-red-400 font-bold text-sm transition-all text-left mt-4"
-        >
-          <LogOut size={20} /> Sign Out
-        </button>
+
+        {user?._id ? (
+          <>
+            <SidebarLink Icon={User} label="My Profile" path="/profile" router={router} close={close} />
+            <button
+              onClick={() => {
+                signOut();
+                close();
+              }}
+              className="flex items-center gap-4 px-6 py-4 rounded-3xl bg-red-500/10 text-red-400 font-bold text-sm transition-all text-left mt-4"
+            >
+              <LogOut size={20} /> Sign Out
+            </button>
+          </>
+        ) : (
+          <SidebarLink Icon={LogIn} label="Sign In" path="/login" router={router} close={close} />
+        )}
       </div>
 
       <div className="mt-auto pt-8 border-t border-white/10">
@@ -330,7 +375,15 @@ const Sidebar = ({ close, router, user }: any) => (
   </motion.div>
 );
 
-const SidebarLink = ({ Icon, label, path, router, close }: any) => (
+interface SidebarLinkProps {
+  Icon: React.ComponentType<{ size: number; className?: string }>;
+  label: string;
+  path: string;
+  router: ReturnType<typeof useRouter>;
+  close: () => void;
+}
+
+const SidebarLink = ({ Icon, label, path, router, close }: SidebarLinkProps) => (
   <button
     onClick={() => {
       router.push(path);

@@ -4,11 +4,11 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { motion } from "framer-motion";
-import getAllOrdersData from "@/hooks/getAllOrderData";
+import useGetAllOrderData from "@/hooks/useGetAllOrderData";
 
 export default function AllOrdersPage() {
   // Fetch all orders
-  getAllOrdersData();
+  useGetAllOrderData();
 
   const { allOrderData } = useSelector(
     (state: RootState) => state.order
@@ -82,9 +82,9 @@ export default function AllOrdersPage() {
                 </td>
               </tr>
             ) : (
-              orders.map((order: any) => (
+              orders.map((order) => (
                 <tr
-                  key={order._id}
+                  key={String(order._id)}
                   className="border-t border-white/10 hover:bg-white/5 transition"
                 >
                   <td className="p-4">
@@ -100,17 +100,20 @@ export default function AllOrdersPage() {
                   </td>
 
                   <td className="p-4 capitalize">
-                    {order.productVendor?.shopName || "N/A"}
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                    {(order.productVendor as any)?.shopName || "N/A"}
                     <br />
                     <span className="text-xs text-gray-400">
-                      {order.productVendor?.email || "no email"}
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                      {(order.productVendor as any)?.email || "no email"}
                     </span>
                   </td>
 
                   <td className="p-4">
-                    {order.products.map((p: any, i: number) => (
+                    {order.products.map((p, i: number) => (
                       <div key={i}>
-                        {p.product?.title} × {p.quantity}
+                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                        {(p.product as any)?.title} × {p.quantity}
                       </div>
                     ))}
                   </td>
@@ -142,7 +145,7 @@ export default function AllOrdersPage() {
                   </td>
 
                   <td className="p-4">
-                    {formatDate(order.createdAt)}
+                    {formatDate(String(order.createdAt))}
                   </td>
                 </tr>
               ))
@@ -153,9 +156,9 @@ export default function AllOrdersPage() {
 
       {/* ================= MOBILE CARDS ================= */}
       <div className="sm:hidden space-y-4 mt-4">
-        {orders.map((order: any) => (
+        {orders.map((order) => (
           <motion.div
-            key={order._id}
+            key={String(order._id)}
             whileHover={{ scale: 1.02 }}
             className="bg-white/10 rounded-xl p-4 border border-white/20"
           >
@@ -165,7 +168,7 @@ export default function AllOrdersPage() {
                   #{String(order._id).slice(-8)}
                 </p>
                 <p className="text-xs text-gray-400">
-                  {formatDate(order.createdAt)}
+                  {formatDate(String(order.createdAt))}
                 </p>
               </div>
 
@@ -185,17 +188,20 @@ export default function AllOrdersPage() {
 
             <div className="mt-3">
               <p className="text-sm">
-                <b>Vendor:</b> {order.productVendor?.shopName}
+                <b>Vendor:</b> {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {(order.productVendor as any)?.shopName}
               </p>
               <p className="text-xs text-gray-400">
-                {order.productVendor?.email}
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {(order.productVendor as any)?.email}
               </p>
             </div>
 
             <div className="mt-3 text-sm">
-              {order.products.map((p: any, i: number) => (
+              {order.products.map((p, i: number) => (
                 <p key={i}>
-                  {p.product?.title} × {p.quantity}
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {(p.product as any)?.title} × {p.quantity}
                 </p>
               ))}
             </div>

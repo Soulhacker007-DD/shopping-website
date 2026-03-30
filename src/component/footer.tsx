@@ -2,11 +2,9 @@
 import { useRouter } from "next/navigation";
 import { IUser } from "@/models/user.model";
 import { 
-  ShoppingBag, 
   Mail, 
   Phone, 
   MapPin, 
-  ArrowRight,
   ShieldCheck
 } from "lucide-react";
 import { FaInstagram, FaXTwitter, FaLinkedinIn } from "react-icons/fa6";
@@ -66,16 +64,16 @@ export default function Footer({ user }: { user: IUser }) {
             <ul className="space-y-4">
               <FooterLink label="My Profile" onClick={() => router.push("/profile")} />
               <FooterLink label="Track Orders" onClick={() => router.push("/orders")} />
-              {isAdminOrVendor && (
-                <div className="pt-4 p-6 rounded-3xl bg-white/5 border border-white/10 space-y-3">
-                  <div className="flex items-center gap-2 text-white font-black text-xs uppercase tracking-widest">
-                    <ShieldCheck className="w-4 h-4 text-blue-500" />
-                    {role} Access
-                  </div>
-                  <p className="text-[10px] uppercase font-bold text-gray-500">Secure Internal Dashboard</p>
-                </div>
-              )}
             </ul>
+            {isAdminOrVendor && (
+              <div className="pt-4 p-6 rounded-3xl bg-white/5 border border-white/10 space-y-3">
+                <div className="flex items-center gap-2 text-white font-black text-xs uppercase tracking-widest">
+                  <ShieldCheck className="w-4 h-4 text-blue-500" />
+                  {role} Access
+                </div>
+                <p className="text-[10px] uppercase font-bold text-gray-500">Secure Internal Dashboard</p>
+              </div>
+            )}
           </div>
 
           {/* Contact Info */}
@@ -95,9 +93,9 @@ export default function Footer({ user }: { user: IUser }) {
             © {new Date().getFullYear()} Rushcart Ecosystem — All Rights Reserved
           </p>
           <div className="flex items-center gap-8 text-[10px] font-black uppercase tracking-widest">
-            <button onClick={() => router.push("/privacy")} className="hover:text-white transition-colors">Privacy Policy</button>
-            <button onClick={() => router.push("/terms")} className="hover:text-white transition-colors">Terms of Service</button>
-            <button onClick={() => router.push("/login")} className="hover:text-blue-400 text-blue-500/80 transition-colors">Forgot Login?</button>
+            <button title="Privacy Policy" onClick={() => router.push("/privacy")} className="hover:text-white transition-colors">Privacy Policy</button>
+            <button title="Terms of Service" onClick={() => router.push("/terms")} className="hover:text-white transition-colors">Terms of Service</button>
+            <button title="Forgot Login" onClick={() => router.push("/login")} className="hover:text-blue-400 text-blue-500/80 transition-colors">Forgot Login?</button>
           </div>
         </div>
       </div>
@@ -105,19 +103,30 @@ export default function Footer({ user }: { user: IUser }) {
   );
 }
 
-const FooterLink = ({ label, onClick }: any) => (
+interface FooterLinkProps {
+  label: string;
+  onClick: () => void;
+}
+
+const FooterLink = ({ label, onClick }: FooterLinkProps) => (
   <li 
     onClick={onClick}
     className="group flex items-center gap-2 cursor-pointer hover:text-white transition-colors text-sm font-bold"
   >
-    <div className="w-0 group-hover:w-2 h-[1px] bg-blue-500 transition-all" />
+    <div className="w-0 group-hover:w-2 h-px bg-blue-500 transition-all" />
     {label}
   </li>
 );
 
-const SocialIcon = ({ Icon, href }: any) => (
+interface SocialIconProps {
+  Icon: React.ComponentType<{ size: number }>;
+  href: string;
+}
+
+const SocialIcon = ({ Icon, href }: SocialIconProps) => (
   <a 
-    href={href} 
+    href={href}
+    title={href}
     target="_blank" 
     rel="noopener noreferrer"
     className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white hover:bg-blue-500 hover:border-blue-500 transition-all cursor-pointer"
@@ -126,7 +135,12 @@ const SocialIcon = ({ Icon, href }: any) => (
   </a>
 );
 
-const ContactItem = ({ Icon, text }: any) => (
+interface ContactItemProps {
+  Icon: React.ComponentType<{ size: number }>;
+  text: string;
+}
+
+const ContactItem = ({ Icon, text }: ContactItemProps) => (
   <div className="flex items-center gap-4 group">
     <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-blue-500 group-hover:scale-110 transition-transform">
       <Icon size={18} />

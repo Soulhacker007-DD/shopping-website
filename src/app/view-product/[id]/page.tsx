@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { 
@@ -20,12 +20,19 @@ import {
   LayoutGrid
 } from "lucide-react";
 import UserProductCard from "@/component/userProductCard";
+import useGetCurrentUser from "@/hooks/useGetCurrentUser";
+import useGetAllProductsData from "@/hooks/useGetAllProductsData";
 import { IProduct } from "@/models/product.model";
-import getAllProductsData from "@/hooks/getAllProductsData";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 
-const PolicyBadge = ({ Icon, text, color }: any) => (
+interface PolicyBadgeProps {
+  Icon: React.ComponentType<{ size: number; className?: string }>;
+  text: string;
+  color: string;
+}
+
+const PolicyBadge = ({ Icon, text, color }: PolicyBadgeProps) => (
   <div className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-3xl group hover:bg-white/10 transition-colors">
      <Icon size={24} className={`${color} mb-3 group-hover:scale-110 transition-transform`} />
      <span className="text-[10px] font-black uppercase tracking-widest text-center text-gray-500 group-hover:text-white transition-colors">{text}</span>
@@ -37,7 +44,8 @@ export default function ProductViewPage() {
   const id = params.id;
   const router = useRouter();
   
-  getAllProductsData();
+  useGetCurrentUser();
+  useGetAllProductsData();
   
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState("");
@@ -77,7 +85,7 @@ export default function ProductViewPage() {
 
   const images = [product.image1, product.image2, product.image3, product.image4].filter(Boolean);
   const totalReviews = product.reviews?.length ?? 0;
-  const avgRating = totalReviews > 0 ? (product.reviews!.reduce((sum: number, r: any) => sum + r.rating, 0) / totalReviews).toFixed(1) : "0";
+  const avgRating = totalReviews > 0 ? (product.reviews!.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / totalReviews).toFixed(1) : "0";
   const relatedProducts = allProductsData?.filter(p => p?.category === product?.category && p?._id !== product?._id) || [];
 
   const handleAddToCart = async () => {
@@ -93,8 +101,10 @@ export default function ProductViewPage() {
       });
       if (res.status === 200) alert("✅ Mission Accomplished: Item Added to Arsenal");
       router.push("/cart");
-    } catch (err: any) {
-      alert(err?.response?.data?.message || "Operation Failed ❌");
+    } catch (err: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const error = err as any;
+      alert(error?.response?.data?.message || "Operation Failed ❌");
     }
   };
 
@@ -117,8 +127,10 @@ export default function ProductViewPage() {
       setReviewComment("");
       setReviewImage(null);
       setPreview(null);
-    } catch (err: any) {
-      alert(err?.response?.data?.message || "Transmission Interrupted");
+    } catch (err: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const error = err as any;
+      alert(error?.response?.data?.message || "Transmission Interrupted");
     } finally {
       setSubmittingReview(false);
     }
@@ -165,6 +177,7 @@ export default function ProductViewPage() {
                 <button
                   key={i}
                   onClick={() => setActiveImage(i)}
+                  title={`View image ${i + 1}`}
                   className={`relative w-24 h-24 rounded-3xl border transition-all overflow-hidden p-2 ${
                     activeImage === i ? "bg-white/10 border-blue-500 scale-110 shadow-lg shadow-blue-500/20" : "bg-white/5 border-white/10 hover:border-white/20"
                   }`}
@@ -227,7 +240,8 @@ export default function ProductViewPage() {
                <div className="space-y-4">
                   <button 
                     onClick={handleAddToCart}
-                    className="w-full flex items-center justify-center gap-4 py-6 bg-blue-600 rounded-[2rem] text-sm font-black uppercase tracking-widest transition-all hover:scale-[1.02] shadow-2xl shadow-blue-500/20 active:scale-95 group"
+                    title="Add to cart"
+                    className="w-full flex items-center justify-center gap-4 py-6 bg-blue-600 rounded-4xl text-sm font-black uppercase tracking-widest transition-all hover:scale-102 shadow-2xl shadow-blue-500/20 active:scale-95 group"
                   >
                     <ShoppingCart size={20} className="group-hover:translate-x-1 transition-transform" />
                     Initialize Purchase
@@ -302,7 +316,8 @@ export default function ProductViewPage() {
                        <div className="flex gap-3 px-2">
                           {[1, 2, 3, 4, 5].map((i) => (
                             <button 
-                              key={i} 
+                              key={i}
+                              title={`Rate ${i} stars`}
                               onClick={() => setReviewRating(i)}
                               className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${
                                 i <= reviewRating ? "bg-yellow-500 text-black shadow-lg shadow-yellow-500/20" : "bg-white/5 text-gray-500 hover:bg-white/10"
@@ -343,7 +358,8 @@ export default function ProductViewPage() {
                        <button 
                          onClick={submitReview}
                          disabled={submittingReview}
-                         className="w-full flex items-center justify-center gap-2 py-5 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50"
+                         title="Submit your review"
+                         className="w-full flex items-center justify-center gap-2 py-5 bg-linear-to-r from-purple-600 to-indigo-600 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-102 active:scale-95 disabled:opacity-50"
                        >
                          {submittingReview ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Plus size={16} />}
                          Transmit Intelligence
@@ -365,7 +381,7 @@ export default function ProductViewPage() {
                           key={i}
                           initial={{ opacity: 0, x: 20 }}
                           whileInView={{ opacity: 1, x: 0 }}
-                          className="bg-white/5 border border-white/10 rounded-[2rem] p-6 hover:bg-white/[0.08] transition-colors"
+                          className="bg-white/5 border border-white/10 rounded-4xl p-6 hover:bg-white/8 transition-colors"
                         >
                            <header className="flex items-center gap-4 mb-4">
                               <div className="w-12 h-12 rounded-2xl bg-[#0a0a0a] border border-white/10 flex items-center justify-center overflow-hidden">
@@ -380,7 +396,7 @@ export default function ProductViewPage() {
                                  </div>
                               </div>
                            </header>
-                           <p className="text-sm text-gray-400 font-medium leading-relaxed mb-4">"{r.comment}"</p>
+                           <p className="text-sm text-gray-400 font-medium leading-relaxed mb-4">&quot;{r.comment}&quot;</p>
                            {r.image && (
                               <div className="relative w-full h-40 bg-black rounded-xl overflow-hidden border border-white/10">
                                 <Image src={r.image} alt="Evidence" fill className="object-contain" />

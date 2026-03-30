@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import getAllVendorData from "@/hooks/getAllVendorData";
+import useGetAllVendorData from "@/hooks/useGetAllVendorData";
 
 type Product = {
   _id: string;
@@ -28,7 +28,7 @@ type Vendor = {
 
 export default function VendorDetails() {
 
-getAllVendorData()
+useGetAllVendorData()
  
   const allVendorData: Vendor[] = useSelector(
     (state: any) => state.vendor.allVendorData

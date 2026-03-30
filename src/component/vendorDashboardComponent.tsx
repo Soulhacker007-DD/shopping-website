@@ -37,14 +37,14 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-import getCurrentUser from "@/hooks/getCurrentUser";
-import getAllOrdersData from "@/hooks/getAllOrderData";
-import getAllProductsData from "@/hooks/getAllProductsData";
+import useGetCurrentUser from "@/hooks/useGetCurrentUser";
+import useGetAllOrderData from "@/hooks/useGetAllOrderData";
+import useGetAllProductsData from "@/hooks/useGetAllProductsData";
 
 export default function VendorDashboardPage() {
-  getCurrentUser();
-  getAllOrdersData();
-  getAllProductsData();
+  useGetCurrentUser();
+  useGetAllOrderData();
+  useGetAllProductsData();
 
   const { userData } = useSelector((state: RootState) => state.user);
   const { allOrderData } = useSelector((state: RootState) => state.order);

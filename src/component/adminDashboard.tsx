@@ -1,13 +1,13 @@
 'use client'
 import React from 'react'
 import AdminDashbordLayout from './AdminDashboardLayout'
-import getCurrentUser from '@/hooks/getCurrentUser'
+import useGetCurrentUser from '@/hooks/useGetCurrentUser'
 
 
 
 
 function AdminDashboard() {
-  getCurrentUser()
+  useGetCurrentUser()
   return (
     <div className='w-full min-h-screen pt-15'>
     

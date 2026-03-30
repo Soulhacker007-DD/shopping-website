@@ -25,11 +25,11 @@ import {
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
 import { setUserData } from "@/redux/userSlice";
-import getCurrentUser from "@/hooks/getCurrentUser";
+import useGetCurrentUser from "@/hooks/useGetCurrentUser";
 
 export default function ProfilePage() {
   const router = useRouter();
-  getCurrentUser();
+  useGetCurrentUser();
   const user = useSelector((state: RootState) => state.user.userData);
   const dispatch = useDispatch<AppDispatch>();
 

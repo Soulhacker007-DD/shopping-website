@@ -13,10 +13,7 @@ import {
   CartesianGrid,
   PieChart,
   Pie,
-  Cell,
-  Legend,
-  AreaChart,
-  Area
+  Cell
 } from "recharts";
 import { 
   ShieldCheck, 
@@ -24,20 +21,20 @@ import {
   Package, 
   ShoppingCart, 
   TrendingUp, 
-  Clock, 
   Activity, 
   Globe, 
   Zap,
   ArrowUpRight,
   Store
 } from "lucide-react";
-import getAllVendorData from "@/hooks/getAllVendorData";
-import getAllOrdersData from "@/hooks/getAllOrderData";
+import useGetAllVendorData from "@/hooks/useGetAllVendorData";
+import useGetAllOrderData from "@/hooks/useGetAllOrderData";
 import { motion } from "framer-motion";
+import { IUser } from "@/models/user.model";
 
 export default function AdminDashboardPage() {
-  getAllVendorData();
-  getAllOrdersData();
+  useGetAllVendorData();
+  useGetAllOrderData();
 
   const { allVendorData, allProductsData } = useSelector(
     (state: RootState) => state.vendor
@@ -46,20 +43,25 @@ export default function AdminDashboardPage() {
     (state: RootState) => state.order
   );
 
-  const vendors = allVendorData || [];
-  const pendingVendors = vendors.filter((v: any) => v.verificationStatus === "pending");
-  const pendingProducts = allProductsData.filter((p: any) => p.verificationStatus === "pending");
-  const deliveredOrders = allOrderData.filter((o: any) => o.orderStatus === "delivered");
-  const cancelledOrders = allOrderData.filter((o: any) => o.orderStatus === "cancelled");
-  const returnedOrders = allOrderData.filter((o: any) => o.orderStatus === "returned");
-  const remainingOrders = allOrderData.filter((o: any) => !["delivered", "cancelled", "returned"].includes(o.orderStatus));
+  const vendors = (allVendorData || []) as IUser[];
+  const pendingVendors = vendors.filter((v) => v.verificationStatus === "pending");
+  const pendingProducts = (allProductsData || []).filter((p) => p.verificationStatus === "pending");
+  const deliveredOrders = (allOrderData || []).filter((o) => o.orderStatus === "delivered");
+  const cancelledOrders = (allOrderData || []).filter((o) => o.orderStatus === "cancelled");
+  const returnedOrders = (allOrderData || []).filter((o) => o.orderStatus === "returned");
+  const remainingOrders = (allOrderData || []).filter((o) => !["delivered", "cancelled", "returned"].includes(o.orderStatus));
 
   let totalEarnings = 0;
-  deliveredOrders.forEach((o: any) => { if (o.isPaid) totalEarnings += o.totalAmount; });
+  deliveredOrders.forEach((o) => { if (o.isPaid) totalEarnings += o.totalAmount; });
 
   const vendorOrderMap: Record<string, number> = {};
-  allOrderData.forEach((o: any) => {
-    const name = o.productVendor?.shopName || "Unknown";
+  (allOrderData || []).forEach((o) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const vendorName = typeof o.productVendor === "object" && (o.productVendor as any)?.shopName
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ? (o.productVendor as any).shopName
+      : "Unknown";
+    const name = String(vendorName);
     vendorOrderMap[name] = (vendorOrderMap[name] || 0) + 1;
   });
 
@@ -230,7 +232,7 @@ export default function AdminDashboardPage() {
                {orderProgress.map((item, i) => (
                  <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/5">
                     <div className="flex items-center gap-3">
-                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[i] }} />
+                       <div className={`w-2 h-2 rounded-full ${i === 0 ? "bg-blue-500" : i === 1 ? "bg-purple-500" : i === 2 ? "bg-red-500" : "bg-orange-500"}`} />
                        <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{item.name}</span>
                     </div>
                     <span className="text-xs font-black">{item.value}</span>
@@ -251,13 +253,15 @@ export default function AdminDashboardPage() {
            </header>
 
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-             {vendors.map((vendor: any, index: number) => {
-                const vendorOrders = allOrderData.filter(o => String(o.productVendor?._id || o.productVendor) === String(vendor._id));
-                const vendorEarning = vendorOrders.reduce((acc, o) => (o.orderStatus === "delivered" && o.isPaid) ? acc + o.totalAmount : acc, 0);
+             {vendors.map((vendor: IUser, index: number) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const vendorOrders = (allOrderData || []).filter((o: any) => String(o.productVendor?._id || o.productVendor) === String(vendor._id));
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const vendorEarning = vendorOrders.reduce((acc: number, o: any) => (o.orderStatus === "delivered" && o.isPaid) ? acc + o.totalAmount : acc, 0);
 
                 return (
                   <motion.div
-                    key={vendor._id}
+                    key={String(vendor._id)}
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.05 }}
@@ -277,13 +281,13 @@ export default function AdminDashboardPage() {
                             {vendor.verificationStatus}
                           </div>
                        </div>
-                       <button className="w-10 h-10 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-gray-500 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                       <button className="w-10 h-10 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-gray-500 group-hover:bg-blue-500 group-hover:text-white transition-all" title="View vendor details">
                           <ArrowUpRight size={18} />
                        </button>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                       <MetricMini label="Unit Count" value={allProductsData.filter(p => String(p.vendor?._id || p.vendor) === String(vendor._id)).length} />
+                       <MetricMini label="Unit Count" value={(allProductsData || []).filter((p) => String(p.vendor?._id || p.vendor) === String(vendor._id)).length} />
                        <MetricMini label="Log Flow" value={vendorOrders.length} />
                     </div>
 
@@ -306,8 +310,16 @@ export default function AdminDashboardPage() {
 
 /* ================= COMPONENTS ================= */
 
-function StatBox({ title, value, Icon, trend, color }: any) {
-  const colorMap: any = {
+interface StatBoxProps {
+  title: string;
+  value: string | number;
+  Icon: React.ComponentType<{ size: number; className?: string }>;
+  trend: string;
+  color: "blue" | "purple" | "emerald" | "amber";
+}
+
+function StatBox({ title, value, Icon, trend, color }: StatBoxProps) {
+  const colorMap: Record<string, string> = {
     blue: "text-blue-500 bg-blue-500/10 border-blue-500/20 shadow-[0_20px_40px_-15px_rgba(59,130,246,0.1)]",
     purple: "text-purple-500 bg-purple-500/10 border-purple-500/20 shadow-[0_20px_40px_-15px_rgba(139,92,246,0.1)]",
     emerald: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20 shadow-[0_20px_40px_-15px_rgba(16,185,129,0.1)]",
@@ -337,7 +349,7 @@ function StatBox({ title, value, Icon, trend, color }: any) {
   );
 }
 
-function MetricMini({ label, value }: { label: string; value: any }) {
+function MetricMini({ label, value }: { label: string; value: number | string }) {
   return (
     <div className="bg-black/40 border border-white/5 rounded-2xl p-4 space-y-1">
       <span className="block text-[8px] font-black uppercase tracking-widest text-gray-600">{label}</span>

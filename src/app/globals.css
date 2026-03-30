@@ -1,9 +1,36 @@
 @import "tailwindcss";
 
-
+/* Hide scrollbars across browsers */
 ::-webkit-scrollbar {
   display: none;
 }
-* {
-  scrollbar-width: none;
+
+@supports (scrollbar-width: auto) {
+  * {
+    scrollbar-width: none;
+  }
+}
+
+.bg-premium-overlay {
+  background-image: url('/bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.4);
 }

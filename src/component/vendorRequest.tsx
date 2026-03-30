@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { setAllVendorData } from "@/redux/vendorSlice";
-import getAllVendorData from "@/hooks/getAllVendorData";
+import useGetAllVendorData from "@/hooks/useGetAllVendorData";
 
 type Vendor = {
   _id: string;
@@ -19,7 +19,7 @@ type Vendor = {
 
 export default function VendorRequest() {
   const dispatch = useDispatch();
-  getAllVendorData()
+  useGetAllVendorData()
 
   const allVendorData: Vendor[] = useSelector(
     (state: any) => state.vendor.allVendorData

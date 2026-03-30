@@ -1,39 +1,27 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { motion } from "framer-motion";
 import { IUser } from "@/models/user.model";
 import { IProduct } from "@/models/product.model";
-import getAllVendorData from "@/hooks/getAllVendorData";
+import useGetAllVendorData from "@/hooks/useGetAllVendorData";
 
 export default function ShopDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
 
   // ✅ FETCH DATA ON PAGE LOAD
-  
-    getAllVendorData();
- 
+  useGetAllVendorData();
 
   const { allVendorData } = useSelector(
     (state: RootState) => state.vendor
   );
 
-  const [loading, setLoading] = useState(true);
-
-  // ✅ WAIT FOR REDUX DATA
-  useEffect(() => {
-    if (allVendorData && allVendorData.length > 0) {
-      setLoading(false);
-    }
-  }, [allVendorData]);
-
   // ✅ LOADING UI
-  if (loading) {
+  if (!allVendorData || allVendorData.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white bg-black">
         Loading shop & products...
@@ -60,7 +48,11 @@ export default function ShopDetailPage() {
     : [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white p-6">
+   <div className="min-h-screen 
+bg-linear-to-br 
+from-gray-100 via-white to-gray-200 
+dark:from-gray-900 dark:via-black dark:to-gray-900 
+text-black dark:text-white p-6">
 
       {/* ================== ✅ SHOP HEADER ================== */}
       <motion.div

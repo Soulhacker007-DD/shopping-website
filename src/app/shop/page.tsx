@@ -6,13 +6,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { IUser } from "@/models/user.model";
 import { motion, AnimatePresence } from "framer-motion";
-import getAllVendorData from "@/hooks/getAllVendorData";
+import useGetAllVendorData from "@/hooks/useGetAllVendorData";
 import { MapPin, ShieldCheck, ShoppingBag, ArrowRight, Zap, Target } from "lucide-react";
 import { ClipLoader } from "react-spinners";
 
 export default function ShopsPage() {
   const router = useRouter();
-  getAllVendorData();
+  useGetAllVendorData();
 
   const allVendorData: IUser[] = useSelector(
     (state: RootState) => state.vendor.allVendorData
@@ -72,14 +72,14 @@ export default function ShopsPage() {
               className="group relative bg-[#0a0a0a] backdrop-blur-3xl border border-white/5 rounded-[3rem] overflow-hidden cursor-pointer transition-all duration-700 hover:border-emerald-500/40 hover:shadow-[0_40px_80px_-20px_rgba(16,185,129,0.2)]"
             >
               {/* Tactical Viewport (Banner) */}
-              <div className="relative w-full aspect-[16/11] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 bg-white/5">
+              <div className="relative w-full aspect-video overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 bg-white/5">
                 <Image
                   src={vendor.image || "/shop.png"}
                   alt={vendor.shopName || "Shop"}
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-90" />
+                <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0a] via-transparent to-transparent opacity-90" />
                 
                 {/* Visual ID Badge */}
                 <div className="absolute top-6 left-6">
@@ -102,7 +102,7 @@ export default function ShopsPage() {
                     {vendor.shopName || "Unknown_Node"}
                   </h3>
                   <div className="flex items-start gap-3 text-gray-600 transition-colors group-hover:text-gray-400">
-                    <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-emerald-500/50 group-hover:text-emerald-500" />
+                    <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-emerald-500/50 group-hover:text-emerald-500" />
                     <p className="text-[9px] font-black uppercase tracking-widest leading-relaxed">
                       {vendor.businessAddress || "Sector Undefined"}
                     </p>
@@ -123,7 +123,7 @@ export default function ShopsPage() {
 
               {/* Scanner Line Animation */}
               <motion.div 
-                className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent z-20 pointer-events-none"
+                className="absolute top-0 left-0 w-full h-0.5 bg-linear-to-r from-transparent via-emerald-500/50 to-transparent z-20 pointer-events-none"
                 animate={{ top: ["0%", "100%", "0%"] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
               />

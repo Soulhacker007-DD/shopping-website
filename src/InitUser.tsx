@@ -1,16 +1,16 @@
 'use client'
 import React from 'react'
-import getCurrentUser from './hooks/getCurrentUser'
-import getAllProductsData from './hooks/getAllProductsData'
-import getAllVendorData from './hooks/getAllVendorData'
-import getAllOrdersData from './hooks/getAllOrderData'
+import useGetCurrentUser from './hooks/useGetCurrentUser'
+import useGetAllProductsData from './hooks/useGetAllProductsData'
+import useGetAllVendorData from './hooks/useGetAllVendorData'
+import useGetAllOrderData from './hooks/useGetAllOrderData'
 
 
 function InitUser() {
-  getCurrentUser()
- getAllProductsData()
- getAllVendorData()
- getAllOrdersData()
+  useGetCurrentUser()
+  useGetAllProductsData()
+  useGetAllVendorData()
+  useGetAllOrderData()
   return null
 }
 

@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Image from "next/image";
 import { setAllProductsData } from "@/redux/vendorSlice";
-import getAllProductsData from "@/hooks/getAllProductsData";
+import useGetAllProductsData from "@/hooks/useGetAllProductsData";
 
 type Product = {
   _id: string;
@@ -21,7 +21,7 @@ type Product = {
 
 export default function ProductRequest() {
   const dispatch = useDispatch();
-  getAllProductsData()
+  useGetAllProductsData()
 
   const allProductsData: Product[] = useSelector(
     (state: any) => state.vendor.allProductsData
