@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import Order from "@/models/order.model";
 import Product from "@/models/product.model";
 import User from "@/models/user.model";
+import { NotificationService } from "@/lib/notificationService";
 
 export async function POST(req: NextRequest) {
   try {
@@ -151,6 +152,19 @@ export async function POST(req: NextRequest) {
     user.orders.push(order._id);
 
     await user.save();
+
+    // 📩 SEND NOTIFICATION (Async)
+    try {
+      await NotificationService.sendOrderStatusUpdate(
+        user.email,
+        order._id.toString(),
+        "pending",
+        [{ name: product.title, quantity, price: product.price }],
+        amount
+      );
+    } catch (nErr) {
+      console.error("Confirmation Email Failed:", nErr);
+    }
 
     return NextResponse.json(
       {

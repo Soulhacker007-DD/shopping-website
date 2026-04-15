@@ -11,8 +11,10 @@ const useGetAllProductsData = () => {
             try {
                 const response = await axios.get("/api/product/all-products-data");
                 dispatch(setAllProductsData(response.data));
-            } catch (error) {
-                console.error("Error fetching products:", error);
+            } catch (error: any) {
+                if (error?.response?.status !== 401 && error?.response?.status !== 400 && error?.response?.status !== 403 && error?.response?.status !== 404) {
+                    console.error("Error fetching products:", error);
+                }
             }
         };
 

@@ -22,6 +22,7 @@ import {
   Undo2,
   Ban
 } from "lucide-react";
+import LiveTrackingMap from "@/component/LiveTrackingMap";
 
 export default function OrdersPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -407,13 +408,24 @@ export default function OrdersPage() {
               exit={{ scale: 0.9, opacity: 0 }}
               className="relative z-10 w-full max-w-md bg-[#0a0a0a] border border-white/10 rounded-[3rem] p-8 shadow-2xl"
             >
-              <header className="mb-10 text-center">
-                 <div className="w-16 h-16 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/20">
-                    <Truck size={32} />
+              <header className="mb-6 flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center border border-blue-500/20">
+                        <Truck size={24} />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-black tracking-tight">Real-Time Tracker</h2>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Satellite Position Status</p>
+                    </div>
                  </div>
-                 <h2 className="text-2xl font-black tracking-tight">Real-Time Tracker</h2>
-                 <p className="text-xs font-black uppercase tracking-widest text-gray-500 mt-1">Satellite Position Updates</p>
+                 <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400">
+                    ID #{String(trackOrderModal._id).slice(-8)}
+                 </div>
               </header>
+
+              <div className="mb-10">
+                <LiveTrackingMap status={trackOrderModal.orderStatus} orderId={trackOrderModal._id} />
+              </div>
 
               <div className="relative space-y-12 pl-4">
                  <div className="absolute top-2 left-[21px] bottom-2 w-[2px] bg-gradient-to-b from-blue-500/50 via-gray-800 to-gray-800" />

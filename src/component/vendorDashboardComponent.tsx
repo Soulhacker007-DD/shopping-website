@@ -40,6 +40,7 @@ import { motion } from "framer-motion";
 import useGetCurrentUser from "@/hooks/useGetCurrentUser";
 import useGetAllOrderData from "@/hooks/useGetAllOrderData";
 import useGetAllProductsData from "@/hooks/useGetAllProductsData";
+import AISalesInsights from "./AISalesInsights";
 
 export default function VendorDashboardPage() {
   useGetCurrentUser();
@@ -158,6 +159,8 @@ export default function VendorDashboardPage() {
         <StatCard Icon={ShoppingCart} title="Fulfillment Array" value={vendorOrders.length} color="text-blue-600" label="Active_Manifests" />
         <StatCard Icon={Wallet} title="Revenue Quantum" value={`₹${totalSales.toLocaleString()}`} color="text-indigo-500" label="Liquid_Capital" />
       </div>
+
+      <AISalesInsights orders={validOrders} products={vendorProducts} />
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-10">
         

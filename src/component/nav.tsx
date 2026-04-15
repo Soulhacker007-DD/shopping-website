@@ -14,7 +14,13 @@ import {
   LogIn,
   LogOut,
   Package,
-  ChevronRight
+  ChevronRight,
+  Camera,
+  Loader2,
+  Bot,
+  Sparkles,
+  Mic,
+  MicOff
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
@@ -56,6 +62,33 @@ export default function Navbar({ user }: { user: IUser }) {
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
   const [cartCount, setCartCount] = useState(0);
+  const [isSearchingImg, setIsSearchingImg] = useState(false);
+
+  const handleImageSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsSearchingImg(true);
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const res = await axios.post("/api/ai/image-search", formData);
+      if (res.status === 200) {
+        const { searchQuery } = res.data;
+        // Navigate to category page with the AI-generated query
+        router.push(`/category?search=${encodeURIComponent(searchQuery)}`);
+      }
+    } catch (err: any) {
+      console.error("Image search failed:", err);
+      const errorMsg = err.response?.data?.error || "AI was unable to process this image. Please try again.";
+      alert(`AI Search Error: ${errorMsg}`);
+    } finally {
+      setIsSearchingImg(false);
+      // Clear input
+      if (e.target) e.target.value = "";
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -125,7 +158,34 @@ export default function Navbar({ user }: { user: IUser }) {
         {/* Desktop Icons */}
         <div className="hidden md:flex items-center gap-4">
           <div className="flex items-center gap-2 p-1 bg-gray-100 dark:bg-white/5 backdrop-blur-md rounded-full border border-gray-200 dark:border-white/5">
-            {user?.role === "user" && <IconBtn Icon={Search} onClick={() => router.push("/category")} />}
+            {user?.role === "user" && (
+              <>
+                <IconBtn Icon={Search} onClick={() => router.push("/category")} />
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageSearch}
+                    className="hidden"
+                    id="nav-image-search"
+                  />
+                  <label htmlFor="nav-image-search" className="cursor-pointer">
+                    <IconWithState Icon={Camera} loading={isSearchingImg} />
+                  </label>
+                </div>
+                <div className="h-4 w-[1px] bg-white/10 mx-1" />
+                <motion.button 
+                  whileHover={{ scale: 1.1 }} 
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => window.dispatchEvent(new CustomEvent('toggle-voice-command'))}
+                  className="w-10 h-10 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                  title="Voice Protocol"
+                >
+                  <Mic size={18} />
+                </motion.button>
+                <IconBtn Icon={Bot} onClick={() => window.dispatchEvent(new CustomEvent('toggle-ai-chat'))} />
+              </>
+            )}
             <IconBtn Icon={Phone} onClick={() => router.push("/support")} />
           </div>
 
@@ -220,6 +280,16 @@ const IconBtn = ({ Icon, onClick }: IconBtnProps) => (
   >
     <Icon size={18} />
   </motion.button>
+);
+
+const IconWithState = ({ Icon, loading }: { Icon: any, loading: boolean }) => (
+  <motion.div 
+    whileHover={{ scale: 1.1 }} 
+    whileTap={{ scale: 0.95 }}
+    className="w-10 h-10 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all"
+  >
+    {loading ? <Loader2 size={18} className="animate-spin text-blue-500" /> : <Icon size={18} />}
+  </motion.div>
 );
 
 interface CartBtnProps {
@@ -341,6 +411,15 @@ const Sidebar = ({ close, router, user }: SidebarProps) => (
         <SidebarLink Icon={Home} label="Home" path="/" router={router} close={close} />
         <SidebarLink Icon={LayoutGrid} label="Categories" path="/category" router={router} close={close} />
         <SidebarLink Icon={Store} label="Browse Shops" path="/shop" router={router} close={close} />
+        <button
+          onClick={() => {
+            window.dispatchEvent(new CustomEvent('toggle-ai-chat'));
+            close();
+          }}
+          className="flex items-center gap-4 px-6 py-4 rounded-3xl bg-blue-600/10 hover:bg-blue-600/20 text-blue-500 font-bold text-sm transition-all text-left"
+        >
+          <Sparkles size={20} /> Rushcart AI Assistant
+        </button>
         
         {user?.role === "user" && (
           <SidebarLink Icon={Package} label="Track Orders" path="/orders" router={router} close={close} />

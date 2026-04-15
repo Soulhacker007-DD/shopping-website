@@ -2,6 +2,7 @@ import connectDb from "@/lib/db";
 import User from "@/models/user.model";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
+import { NotificationService } from "@/lib/notificationService";
 
 export async function POST(req:NextRequest) {
     try {
@@ -24,6 +25,14 @@ export async function POST(req:NextRequest) {
             email , 
             password : hashedPassword
         })
+
+        // 📩 Welcome Notification (Async)
+        try {
+            await NotificationService.sendWelcomeEmail(email, name || "Traveler");
+        } catch (nErr) {
+            console.error("Welcome Email Failed:", nErr);
+        }
+
         return NextResponse.json(
                 {user},
             {status:200})

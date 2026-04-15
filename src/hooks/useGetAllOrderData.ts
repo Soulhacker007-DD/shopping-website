@@ -11,8 +11,10 @@ const useGetAllOrderData = () => {
             try {
                 const response = await axios.get("/api/order/allOrder");
                 dispatch(setAllOrderData(response.data.orders));
-            } catch (error) {
-                console.error("Error fetching orders:", error);
+            } catch (error: any) {
+                if (error?.response?.status !== 401 && error?.response?.status !== 400 && error?.response?.status !== 404) {
+                    console.error("Error fetching orders:", error);
+                }
             }
         };
 

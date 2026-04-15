@@ -7,6 +7,8 @@ import ShopsPage from "@/app/shop/page";
 import { motion } from "framer-motion";
 import { Zap, ShieldCheck, Activity, Globe } from "lucide-react";
 
+import RecommendedProducts from "./RecommendedProducts";
+
 function UserDashboard() {
   return (
     <div className="w-full flex min-h-screen bg-black font-sans flex-col relative overflow-hidden">
@@ -20,6 +22,7 @@ function UserDashboard() {
         
         <div className="space-y-40 pb-40">
            <CategoriesSlider />
+           <RecommendedProducts />
            <ProductsPageForUserInterface />
            <ShopsPage />
         </div>

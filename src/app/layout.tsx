@@ -11,6 +11,8 @@ import InitUser from "@/InitUser";
 
 
 import { ThemeProvider } from "@/component/theme-provider";
+import AIChatbot from "@/component/AIChatbot";
+import VoiceNavigation from "@/component/VoiceNavigation";
 
 export const metadata: Metadata = {
   title: "Rushcart — Premium Commerce",
@@ -38,6 +40,10 @@ export default function RootLayout({
               <main className="relative z-10">
                 {children}
               </main>
+              <AIChatbot />
+              <div className="fixed bottom-6 left-6 z-[9999]">
+                <VoiceNavigation />
+              </div>
             </StoreProvider>
           </Provider>
         </ThemeProvider>

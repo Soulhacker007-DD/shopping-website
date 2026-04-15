@@ -8,6 +8,7 @@ import {
   Menu, 
   X, 
   Zap,
+  Megaphone,
   LayoutDashboard,
   Box,
   Truck
@@ -15,6 +16,7 @@ import {
 import VendorProducts from "./VendorProducts";
 import VendorOrdersPage from "./vendorOrder";
 import VendorDashboardPage from "./vendorDashboardComponent";
+import AdminOfferSender from "./AdminOfferSender";
 
 export default function VendorDashbordLayout() {
   const [activePage, setActivePage] = useState("dashboard");
@@ -25,6 +27,7 @@ export default function VendorDashbordLayout() {
       case "dashboard": return <VendorDashboardPage/>;
       case "products": return <VendorProducts/>;
       case "orders": return <VendorOrdersPage/>;
+      case "offers": return <AdminOfferSender />;
       default: return <VendorDashboardPage />;
     }
   };
@@ -33,6 +36,7 @@ export default function VendorDashbordLayout() {
     { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
     { id: "products", label: "Catalog", Icon: Box },
     { id: "orders", label: "Manifests", Icon: Truck },
+    { id: "offers", label: "Marketing", Icon: Megaphone },
   ];
 
   return (
@@ -91,6 +95,33 @@ export default function VendorDashbordLayout() {
               )}
             </button>
           ))}
+
+          <div className="pt-8 mt-8 border-t border-white/5 space-y-3">
+             <div className="flex items-center justify-between px-6 mb-2">
+                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-gray-700">AI Assist</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+             </div>
+             
+             <button
+               onClick={() => window.dispatchEvent(new CustomEvent('toggle-ai-chat'))}
+               className="w-full flex items-center gap-4 px-6 py-4 rounded-3xl text-blue-400 hover:bg-blue-400/10 transition-all group/ai"
+             >
+               <div className="w-8 h-8 rounded-xl bg-blue-400/10 flex items-center justify-center group-hover/ai:bg-blue-400 group-hover/ai:text-white transition-all">
+                  <BarChart3 size={14} />
+               </div>
+               <span className="text-[10px] font-black uppercase tracking-widest">Neural Copilot</span>
+             </button>
+
+             <button
+               onClick={() => window.dispatchEvent(new CustomEvent('toggle-voice-command'))}
+               className="w-full flex items-center gap-4 px-6 py-4 rounded-3xl text-emerald-400 hover:bg-emerald-400/10 transition-all group/voice"
+             >
+               <div className="w-8 h-8 rounded-xl bg-emerald-400/10 flex items-center justify-center group-hover/voice:bg-emerald-400 group-hover/voice:text-white transition-all">
+                  <BarChart3 size={14} className="rotate-90" />
+               </div>
+               <span className="text-[10px] font-black uppercase tracking-widest">Voice Protocol</span>
+             </button>
+          </div>
         </nav>
 
         <div className="mt-auto pt-10 border-t border-white/5">
@@ -146,6 +177,29 @@ export default function VendorDashbordLayout() {
                   <span className="text-sm font-black uppercase tracking-widest">{item.label}</span>
                 </button>
               ))}
+
+              <div className="mt-10 pt-10 border-t border-white/10 space-y-4">
+                 <button
+                   onClick={() => {
+                      window.dispatchEvent(new CustomEvent('toggle-ai-chat'));
+                      setMenuOpen(false);
+                   }}
+                   className="w-full flex items-center gap-6 px-8 py-5 rounded-[2rem] bg-blue-600/10 text-blue-400 font-black uppercase tracking-widest text-sm"
+                 >
+                   <BarChart3 size={20} />
+                   Neural Copilot
+                 </button>
+                 <button
+                   onClick={() => {
+                      window.dispatchEvent(new CustomEvent('toggle-voice-command'));
+                      setMenuOpen(false);
+                   }}
+                   className="w-full flex items-center gap-6 px-8 py-5 rounded-[2rem] bg-emerald-600/10 text-emerald-400 font-black uppercase tracking-widest text-sm"
+                 >
+                   <BarChart3 size={20} className="rotate-90" />
+                   Voice Protocol
+                 </button>
+              </div>
             </nav>
           </motion.div>
         )}

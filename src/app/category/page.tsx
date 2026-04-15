@@ -25,8 +25,11 @@ import {
   Zap,
   Activity,
   Layers,
-  ChevronRight
+  ChevronRight,
+  Camera,
+  Loader2
 } from "lucide-react";
+import axios from "axios";
 
 const categoryList = [
   { label: "all", Icon: LayoutGrid, color: "text-blue-500" },
@@ -54,11 +57,38 @@ export default function CategoriesPage() {
   const [displayProducts, setDisplayProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [isSearchingImg, setIsSearchingImg] = useState(false);
+
+  const handleImageSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsSearchingImg(true);
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const res = await axios.post("/api/ai/image-search", formData);
+      if (res.status === 200) {
+        setSearch(res.data.searchQuery);
+        // fetchProducts will trigger automatically because search state changed
+      }
+    } catch (err: any) {
+      console.error(err);
+      const errorMsg = err.response?.data?.error || "AI Search failed. Please try again.";
+      alert(`AI Search Error: ${errorMsg}`);
+    } finally {
+      setIsSearchingImg(false);
+      if (e.target) e.target.value = "";
+    }
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("category");
+    const q = params.get("search");
     if (cat) setSelectedCategory(cat);
+    if (q) setSearch(q);
     setIsReady(true);
   }, []);
 
@@ -149,8 +179,24 @@ export default function CategoriesPage() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search Grid..."
-                    className="w-full bg-transparent pl-16 pr-6 py-6 text-sm font-bold text-white outline-none placeholder:text-gray-700 uppercase tracking-widest"
+                    className="w-full bg-transparent pl-16 pr-20 py-6 text-sm font-bold text-white outline-none placeholder:text-gray-700 uppercase tracking-widest"
                   />
+                  <div className="absolute right-6 top-1/2 -translate-y-1/2">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageSearch}
+                      className="hidden"
+                      id="category-image-search"
+                    />
+                    <label htmlFor="category-image-search" className="cursor-pointer">
+                      {isSearchingImg ? (
+                        <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
+                      ) : (
+                        <Camera className="w-5 h-5 text-gray-500 hover:text-blue-500 transition-colors" />
+                      )}
+                    </label>
+                  </div>
                </div>
             </div>
 

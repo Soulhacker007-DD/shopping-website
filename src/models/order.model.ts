@@ -22,12 +22,13 @@ export interface IOrder extends Document {
     | "pending"
     | "confirmed"
     | "shipped"
+    | "out-for-delivery"
     | "delivered"
+    | "failed"
     | "returned"
     | "cancelled";
 
-    cancelledAt?:Date;
-  // ✅ NEW: RETURNED AMOUNT
+  cancelledAt?: Date;
   returnedAmount?: number;
 
   address: {
@@ -42,10 +43,17 @@ export interface IOrder extends Document {
     stripePaymentId?: string;
     stripeSessionId?: string;
   };
- deliveryDate?:Date;
-  deliveryOtp?:string;
 
-  otpExpiresAt?:Date;
+  trackingUpdates?: {
+    status: string;
+    message?: string;
+    location?: string;
+    timestamp: Date;
+  }[];
+
+  deliveryDate?: Date;
+  deliveryOtp?: string;
+  otpExpiresAt?: Date;
 
   createdAt: Date;
   updatedAt: Date;
@@ -120,44 +128,30 @@ const OrderSchema = new Schema<IOrder>(
         "pending",
         "confirmed",
         "shipped",
+        "out-for-delivery",
         "delivered",
+        "failed",
         "returned",
         "cancelled"
       ],
       default: "pending",
     },
+
     cancelledAt: {
-  type: Date,
-},
+      type: Date,
+    },
 
-
-    // ✅ NEW: Returned Amount for Refund Accounting
     returnedAmount: {
       type: Number,
       default: 0,
     },
 
     address: {
-      name: {
-        type: String,
-        required: true,
-      },
-      phone: {
-        type: String,
-        required: true,
-      },
-      address: {
-        type: String,
-        required: true,
-      },
-      city: {
-        type: String,
-        required: true,
-      },
-      pincode: {
-        type: String,
-        required: true,
-      },
+      name: { type: String, required: true },
+      phone: { type: String, required: true },
+      address: { type: String, required: true },
+      city: { type: String, required: true },
+      pincode: { type: String, required: true },
     },
 
     paymentDetails: {
@@ -165,16 +159,24 @@ const OrderSchema = new Schema<IOrder>(
       stripeSessionId: String,
     },
 
-     deliveryDate: {
-  type: Date,
-},
-    deliveryOtp: {
-  type: String,
-},
-otpExpiresAt: {
-  type: Date,
-},
+    trackingUpdates: [
+      {
+        status: { type: String, required: true },
+        message: { type: String },
+        location: { type: String },
+        timestamp: { type: Date, default: Date.now }
+      }
+    ],
 
+    deliveryDate: {
+      type: Date,
+    },
+    deliveryOtp: {
+      type: String,
+    },
+    otpExpiresAt: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

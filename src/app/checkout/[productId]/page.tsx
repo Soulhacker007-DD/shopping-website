@@ -30,6 +30,61 @@ export default function CheckoutPage() {
   const [paymentMode, setPaymentMode] =
     useState<"cod" | "stripe">("cod");
 
+  // --- Google Places Autocomplete ---
+  useEffect(() => {
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    if (!apiKey) return;
+
+    // Load Google Maps Script
+    const scriptId = "google-maps-script";
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement("script");
+      script.id = scriptId;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => initAutocomplete();
+      document.head.appendChild(script);
+    } else {
+      // Script already loaded
+      initAutocomplete();
+    }
+
+    function initAutocomplete() {
+      const input = document.getElementById("address-autocomplete") as HTMLTextAreaElement;
+      if (!input || !(window as any).google) return;
+
+      const autocomplete = new (window as any).google.maps.places.Autocomplete(input, {
+        types: ["address"],
+        componentRestrictions: { country: "in" }, // Focus on India for multicart
+        fields: ["address_components", "formatted_address"],
+      });
+
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        if (!place.address_components) return;
+
+        let streetAddress = place.formatted_address || "";
+        let cityVal = "";
+        let pinVal = "";
+
+        for (const component of place.address_components) {
+          const types = component.types;
+          if (types.includes("locality") || types.includes("administrative_area_level_2")) {
+            cityVal = component.long_name;
+          }
+          if (types.includes("postal_code")) {
+            pinVal = component.long_name;
+          }
+        }
+
+        setAddress(streetAddress);
+        if (cityVal) setCity(cityVal);
+        if (pinVal) setPincode(pinVal);
+      });
+    }
+  }, []);
+
   useEffect(() => {
     if (!productId) return;
 
@@ -129,10 +184,17 @@ export default function CheckoutPage() {
              text-white placeholder-gray-400
              focus:outline-none focus:ring-2 focus:ring-blue-500
              hover:border-white/40 transition" placeholder="Phone Number" value={phone} onChange={e => setPhone(e.target.value)} />
-          <textarea className="w-full p-3 rounded-xl bg-black/60 border border-white/20
+          <textarea 
+            id="address-autocomplete"
+            className="w-full p-3 rounded-xl bg-black/60 border border-white/20
              text-white placeholder-gray-400
              focus:outline-none focus:ring-2 focus:ring-blue-500
-             hover:border-white/40 transition" rows={3} placeholder="Complete Address" value={address} onChange={e => setAddress(e.target.value)} />
+             hover:border-white/40 transition" 
+            rows={3} 
+            placeholder="Complete Address (Type to search via Google)" 
+            value={address} 
+            onChange={e => setAddress(e.target.value)} 
+          />
 
           <div className="grid grid-cols-2 gap-4">
             <input className="w-full p-3 rounded-xl bg-black/60 border border-white/20

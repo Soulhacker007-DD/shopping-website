@@ -100,6 +100,24 @@ export default function AdminDashbordLayout() {
               )}
             </button>
           ))}
+          
+          <div className="pt-6 mt-6 border-t border-white/5 space-y-2">
+             <p className="px-6 text-[9px] font-black uppercase tracking-[0.3em] text-gray-700 mb-2">Protocols</p>
+             <button
+               onClick={() => window.dispatchEvent(new CustomEvent('toggle-ai-chat'))}
+               className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-blue-500 hover:bg-blue-500/10 transition-all border border-transparent hover:border-blue-500/20"
+             >
+               <Activity size={18} />
+               <span className="text-[11px] font-black uppercase tracking-widest">Neural Link</span>
+             </button>
+             <button
+               onClick={() => window.dispatchEvent(new CustomEvent('toggle-voice-command'))}
+               className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-emerald-500 hover:bg-emerald-500/10 transition-all border border-transparent hover:border-emerald-500/20"
+             >
+               <Activity size={18} className="rotate-90" />
+               <span className="text-[11px] font-black uppercase tracking-widest">Voice Core</span>
+             </button>
+          </div>
         </nav>
 
         <div className="mt-auto pt-8 border-t border-white/5">
@@ -163,6 +181,29 @@ export default function AdminDashbordLayout() {
                     {item.label}
                   </button>
                 ))}
+
+                <div className="mt-8 pt-8 border-t border-white/10 space-y-3">
+                   <button
+                     onClick={() => {
+                        window.dispatchEvent(new CustomEvent('toggle-ai-chat'));
+                        setMenuOpen(false);
+                     }}
+                     className="w-full flex items-center gap-6 px-8 py-5 rounded-[2rem] bg-blue-600/10 text-blue-400 font-black uppercase tracking-widest text-[11px]"
+                   >
+                     <Activity size={18} />
+                     Neural Link
+                   </button>
+                   <button
+                     onClick={() => {
+                        window.dispatchEvent(new CustomEvent('toggle-voice-command'));
+                        setMenuOpen(false);
+                     }}
+                     className="w-full flex items-center gap-6 px-8 py-5 rounded-[2rem] bg-emerald-600/10 text-emerald-400 font-black uppercase tracking-widest text-[11px]"
+                   >
+                     <Activity size={18} className="rotate-90" />
+                     Voice Core
+                   </button>
+                </div>
               </div>
 
               <div className="mt-auto space-y-4">
